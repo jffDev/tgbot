@@ -2,6 +2,16 @@
 
 Обученная модель fast_rcnn_model.pt занимат порядка 160мб и не помещается в репозитории github
 
+## Disclaimer
+
+Проект в стадии разработки и адаптации под модель FAST R-CNN
+
+## Запуск
+
+Для запуска необходимо перейти в web_deploy и запустить start_app.py
+
+Для теста необходимо перейти в tests и запустить api_test.py
+
 ## Log:
 
 Loading PyTorch model and Flask starting server.
