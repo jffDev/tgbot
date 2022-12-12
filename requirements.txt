@@ -12,6 +12,8 @@ flask~=2.2.2
 numpy~=1.23.5
 Pillow~=9.3.0
 
-opencv-python
+opencv-python~=4.6.0.66
 
 #pip3 install torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu117
+torch
+torchvision

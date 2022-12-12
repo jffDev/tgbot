@@ -2,7 +2,6 @@ import os
 import sys
 from pathlib import Path
 
-import numpy as np
 import cv2
 import flask
 import torch
@@ -24,14 +23,13 @@ def predict():
     classes = ['_', 'apple', 'orange', 'banana']
 
     if flask.request.method == "POST":
-        print(flask.request.files)
         if flask.request.files.get("image"):
             # Read the image in PIL format
             f = flask.request.files["image"]
-            print("title", f.filename.title())
+            # save file to disk
+            f.save(f.filename)
 
-            f.save(f.filename)  # save file to disk
-
+            # get image
             img = cv2.imread(f.filename.title())
 
             # Define a transform to convert the image to tensor
@@ -40,23 +38,18 @@ def predict():
             # Convert the image to PyTorch tensor
             img = transform(img)
 
-            print(type(img))
-
             with torch.no_grad():
                 prediction = model([img.to(device)])[0]
                 prediction = nms(prediction, threshold=0.3)
 
-            print(prediction)
-
             data["prediction"] = classes[prediction['labels'][0]]
-
-            # data["prediction"] = 'apple'
             data["success"] = True
-            # os.remove(f.filename)
+            os.remove(f.filename)
 
             return flask.jsonify(data)
 
 
+# Non-maximum Suppression
 def nms(prediction, threshold):
     keep = torchvision.ops.nms(prediction['boxes'], prediction['scores'], threshold)
 
@@ -68,12 +61,9 @@ def nms(prediction, threshold):
     return final_prediction
 
 
-def tensorToPIL(img):
-    return T.transforms.ToPILImage()(img).convert('RGB')
-
-
 def load_model() -> None:
     global model
+    # load model from disk
     PATH = Path("../../models") / "fast_rcnn_model.pt"
     PATH = PATH.resolve().absolute()
 
@@ -90,7 +80,7 @@ def load_model() -> None:
 
 
 if __name__ == "__main__":
-    print("Loading PyTorch model and Flask starting server.")
-    print("Please wait until server has fully started...")
+    print("Loading PyTorch model")
     load_model()
+    print("Starting Flask server")
     app.run(debug=True)
