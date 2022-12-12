@@ -21,11 +21,7 @@ device = torch.device('cuda') if torch.cuda.is_available() else torch.device('cp
 @app.route("/predict", methods=["POST"])
 def predict():
     data = {"success": False}
-    classes = (
-        'apple',
-        'orange',
-        'banana'
-    )
+    classes = ['_', 'apple', 'orange', 'banana']
 
     if flask.request.method == "POST":
         print(flask.request.files)
@@ -47,18 +43,29 @@ def predict():
             print(type(img))
 
             with torch.no_grad():
-                prediction = model([img.to(device)])
+                prediction = model([img.to(device)])[0]
+                prediction = nms(prediction, threshold=0.3)
 
             print(prediction)
-            # keep = torchvision.ops.nms(prediction['boxes'], prediction['scores'], 0.2)
-            # print(keep)
-            # data["prediction"] = classes[prediction['labels'][keep]]
 
-            data["prediction"] = 'apple'
+            data["prediction"] = classes[prediction['labels'][0]]
+
+            # data["prediction"] = 'apple'
             data["success"] = True
             # os.remove(f.filename)
 
             return flask.jsonify(data)
+
+
+def nms(prediction, threshold):
+    keep = torchvision.ops.nms(prediction['boxes'], prediction['scores'], threshold)
+
+    final_prediction = prediction
+    final_prediction['boxes'] = final_prediction['boxes'][keep]
+    final_prediction['scores'] = final_prediction['scores'][keep]
+    final_prediction['labels'] = final_prediction['labels'][keep]
+
+    return final_prediction
 
 
 def tensorToPIL(img):

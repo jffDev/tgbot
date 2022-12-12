@@ -18,4 +18,5 @@ def predict_result(image_path):
 
 
 if __name__ == "__main__":
-    predict_result("data\\test\\apple_77.jpg")
+    # predict_result("data\\test\\apple_77.jpg")
+    predict_result("data\\test\\banana_77.jpg")
