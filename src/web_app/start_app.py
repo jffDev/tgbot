@@ -1,12 +1,13 @@
 import os
 import sys
+import numpy as np
 from pathlib import Path
 
 import cv2
 import flask
 import torch
-import torchvision
 from torchvision import transforms as T
+from src.features.utils import ModelUtils
 
 import_path = os.getcwd()
 sys.path.insert(0, import_path)
@@ -29,8 +30,14 @@ def predict():
             # save file to disk
             f.save(f.filename)
 
+            img_name = f.filename.title()
+            print(img_name)
+
             # get image
             img = cv2.imread(f.filename.title())
+            img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB).astype(np.float32)
+            # img = cv2.resize(img, (480, 480), cv2.INTER_AREA)
+            img /= 255.0
 
             # Define a transform to convert the image to tensor
             transform = T.transforms.ToTensor()
@@ -38,9 +45,16 @@ def predict():
             # Convert the image to PyTorch tensor
             img = transform(img)
 
+            utils = ModelUtils()
+
             with torch.no_grad():
                 prediction = model([img.to(device)])[0]
-                prediction = nms(prediction, threshold=0.3)
+                print(prediction)
+                prediction = utils.nms(prediction, threshold=0.3)
+            source_img = cv2.imread(img_name)
+            utils.plot_box(source_img, prediction, classes)
+
+            print(prediction)
 
             data["prediction"] = classes[prediction['labels'][0]]
             data["success"] = True
@@ -49,16 +63,6 @@ def predict():
             return flask.jsonify(data)
 
 
-# Non-maximum Suppression
-def nms(prediction, threshold):
-    keep = torchvision.ops.nms(prediction['boxes'], prediction['scores'], threshold)
-
-    final_prediction = prediction
-    final_prediction['boxes'] = final_prediction['boxes'][keep]
-    final_prediction['scores'] = final_prediction['scores'][keep]
-    final_prediction['labels'] = final_prediction['labels'][keep]
-
-    return final_prediction
 
 
 def load_model() -> None:

@@ -60,4 +60,10 @@ Name of current CUDA device:NVIDIA GeForce RTX 3090 Ti
 }]
 ***
 
+Predicted class: orange, url: data\test\orange_80.jpg\
+Predicted class: apple, url: data\test\apple_77.jpg\
+Predicted class: banana, url: data\test\banana_77.jpg
+
+***
+
 # Project description

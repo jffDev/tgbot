@@ -12,11 +12,12 @@ def predict_result(image_path):
     result = requests.post(PyTorch_REST_API_URL, files=payload).json()
 
     if result["success"]:
-        print(f"Predicted class: {result['prediction']}")
+        print(f"Predicted class: {result['prediction']}, url: {image_path}")
     else:
         print("Request failed")
 
 
 if __name__ == "__main__":
+    predict_result("data\\test\\orange_80.jpg")
     # predict_result("data\\test\\apple_77.jpg")
-    predict_result("data\\test\\banana_77.jpg")
+    # predict_result("data\\test\\banana_77.jpg")
