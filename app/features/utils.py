@@ -22,7 +22,8 @@ class ModelUtils:
         return T.transforms.ToPILImage()(img).convert('RGB')
 
     # Рисование бокса и метки по полученным данным
-    def plot_box(self, img, target, classes):
+    def plot_box(self, filename, img, target, classes):
+        print('plot_box')
         # img = self.tensorToPIL(img)
         # Если данные из cuda, то перенесем на cpu
         if target['boxes'].is_cuda:
@@ -39,6 +40,6 @@ class ModelUtils:
                                      edgecolor='r',
                                      label='Label',
                                      facecolor='none')
-            plt.text(box[0] + 5.0, box[1] + 10.0, classes[label_id])
+            plt.text(box[0] + 10.0, box[1] + 40.0, classes[label_id])
             a.add_patch(rect)
-        plt.savefig("out.png")
+        plt.savefig(filename)
