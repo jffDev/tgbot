@@ -30,7 +30,6 @@ def predict(filename):
 
     with torch.no_grad():
         prediction = model([img2.to(device())])[0]
-        print(prediction)
         prediction = utils.nms(prediction, threshold=0.3)
     source_img = cv2.imread(filename)
     source_img = cv2.cvtColor(source_img, cv2.COLOR_BGR2RGB)

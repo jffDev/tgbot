@@ -10,7 +10,7 @@ def device():
 
 def load_model():
     # load model from disk
-    PATH = Path("../data") / "fast_rcnn_model.pt"
+    PATH = Path("../models") / "fast_rcnn_model.pt"
     PATH = PATH.resolve().absolute()
 
     print('path = ' + str(PATH))

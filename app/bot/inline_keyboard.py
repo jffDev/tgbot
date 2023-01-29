@@ -1,7 +1,8 @@
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 
-BTN_IMG = InlineKeyboardButton('Image', callback_data='image')
-BTN_INFO = InlineKeyboardButton('Info', callback_data='info')
+BTN_DESCRIPTION = InlineKeyboardButton('Как работает', callback_data='description')
+BTN_INFO = InlineKeyboardButton('Описание бота', callback_data='info')
+BTN_TEST = InlineKeyboardButton('Тест', callback_data='test')
 
-IMAGE = InlineKeyboardMarkup().add(BTN_IMG, BTN_INFO)
-INFO = InlineKeyboardMarkup().add(BTN_INFO, BTN_IMG)
+DESCRIPTION = InlineKeyboardMarkup().add(BTN_DESCRIPTION, BTN_INFO, BTN_TEST)
+INFO = InlineKeyboardMarkup().add(BTN_DESCRIPTION, BTN_INFO, BTN_TEST)

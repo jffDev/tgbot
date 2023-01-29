@@ -1,6 +1,7 @@
 import torchvision
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
+import numpy as np
 
 from torchvision import transforms as T
 
@@ -23,8 +24,6 @@ class ModelUtils:
 
     # Рисование бокса и метки по полученным данным
     def plot_box(self, filename, img, target, classes):
-        print('plot_box')
-        # img = self.tensorToPIL(img)
         # Если данные из cuda, то перенесем на cpu
         if target['boxes'].is_cuda:
             target['boxes'] = target['boxes'].cpu()
@@ -32,7 +31,7 @@ class ModelUtils:
             target['scores'] = target['scores'].cpu()
         fig, a = plt.subplots(1)
         a.imshow(img)
-        for box, label_id in (zip(target['boxes'], target['labels'])):
+        for box, label_id, score in (zip(target['boxes'], target['labels'], target['scores'])):
             x, y, width, height = box[0], box[1], box[2] - box[0], box[3] - box[1]
             rect = patches.Rectangle((x, y),
                                      width, height,
@@ -40,6 +39,7 @@ class ModelUtils:
                                      edgecolor='r',
                                      label='Label',
                                      facecolor='none')
-            plt.text(box[0] + 10.0, box[1] + 40.0, classes[label_id])
+            sc = np.around(score.detach().numpy(), 4)
+            plt.text(box[0] + 10.0, box[1] + 40.0, classes[label_id] + ': ' + str(sc))
             a.add_patch(rect)
         plt.savefig(filename)
