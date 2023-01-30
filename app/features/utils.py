@@ -30,6 +30,7 @@ class ModelUtils:
             target['labels'] = target['labels'].cpu()
             target['scores'] = target['scores'].cpu()
         fig, a = plt.subplots(1)
+        plt.axis('off')
         a.imshow(img)
         for box, label_id, score in (zip(target['boxes'], target['labels'], target['scores'])):
             x, y, width, height = box[0], box[1], box[2] - box[0], box[3] - box[1]
