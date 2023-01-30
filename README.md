@@ -39,6 +39,8 @@
 
 ![alt text](readme-demo-2.png)
 
+![img_1.png](readme-demo-3.png)
+
 ## Запуск
 
 Для запуска веб-контейнера необходимо перейти в service и запустить start_app.py
